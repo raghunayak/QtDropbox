@@ -23,26 +23,36 @@
 #include "qdropboxfileinfo.h"
 #include "qdropboxdeltaresponse.h"
 
-typedef int qdropbox_request_type;
+enum class qdropbox_request_type : int {
+    QDROPBOX_REQ_INVALID = 0x00,
+    QDROPBOX_REQ_CONNECT = 0x01,
+    QDROPBOX_REQ_RQTOKEN = 0x02,
+    QDROPBOX_REQ_AULOGIN = 0x03,
+    QDROPBOX_REQ_REDIREC = 0x04,
+    QDROPBOX_REQ_ACCTOKN = 0x05,
+    QDROPBOX_REQ_ACCINFO = 0x06,
+    QDROPBOX_REQ_RQBTOKN = 0x07,
+    QDROPBOX_REQ_BACCTOK = 0x08,
+    QDROPBOX_REQ_METADAT = 0x09,
+    QDROPBOX_REQ_BACCINF = 0x0A,
+    QDROPBOX_REQ_BMETADA = 0x0B,
+    QDROPBOX_REQ_SHRDLNK = 0x0C,
+    QDROPBOX_REQ_BSHRDLN = 0x0D,
+    QDROPBOX_REQ_REVISIO = 0x0E,
+    QDROPBOX_REQ_BREVISI = 0x0F,
+    QDROPBOX_REQ_DELTA = 0x10,
+    QDROPBOX_REQ_BDELTA = 0x11
+};
 
-const qdropbox_request_type QDROPBOX_REQ_INVALID = 0x00;
-const qdropbox_request_type QDROPBOX_REQ_CONNECT = 0x01;
-const qdropbox_request_type QDROPBOX_REQ_RQTOKEN = 0x02;
-const qdropbox_request_type QDROPBOX_REQ_AULOGIN = 0x03;
-const qdropbox_request_type QDROPBOX_REQ_REDIREC = 0x04;
-const qdropbox_request_type QDROPBOX_REQ_ACCTOKN = 0x05;
-const qdropbox_request_type QDROPBOX_REQ_ACCINFO = 0x06;
-const qdropbox_request_type QDROPBOX_REQ_RQBTOKN = 0x07;
-const qdropbox_request_type QDROPBOX_REQ_BACCTOK = 0x08;
-const qdropbox_request_type QDROPBOX_REQ_METADAT = 0x09;
-const qdropbox_request_type QDROPBOX_REQ_BACCINF = 0x0A;
-const qdropbox_request_type QDROPBOX_REQ_BMETADA = 0x0B;
-const qdropbox_request_type QDROPBOX_REQ_SHRDLNK = 0x0C;
-const qdropbox_request_type QDROPBOX_REQ_BSHRDLN = 0x0D;
-const qdropbox_request_type QDROPBOX_REQ_REVISIO = 0x0E;
-const qdropbox_request_type QDROPBOX_REQ_BREVISI = 0x0F;
-const qdropbox_request_type QDROPBOX_REQ_DELTA   = 0x10;
-const qdropbox_request_type QDROPBOX_REQ_BDELTA  = 0x11;
+enum QDROPBOX_HTTP_ERROR_CODES : int {
+    QDROPBOX_ERROR_BAD_INPUT = 400,
+    QDROPBOX_ERROR_EXPIRED_TOKEN = 401,
+    QDROPBOX_ERROR_BAD_OAUTH_REQUEST = 403,
+    QDROPBOX_ERROR_FILE_NOT_FOUND = 404,
+    QDROPBOX_ERROR_WRONG_METHOD = 405,
+    QDROPBOX_ERROR_REQUEST_CAP = 503,
+    QDROPBOX_ERROR_USER_OVER_QUOTA = 507
+};
 
 //! Internally used struct to handle network requests sent from QDropbox
 /*!
@@ -145,7 +155,7 @@ public:
 
       \param parent The parent object QDropbox depends on.
      */
-    explicit QDropbox(QObject *parent = 0);
+    explicit QDropbox(QObject *parent = nullptr);
 
     /*!
       This constructor initializes QDropbox with your key and shared secret. The selected authentication method and

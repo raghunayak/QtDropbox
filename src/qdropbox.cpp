@@ -192,7 +192,7 @@ void QDropbox::requestFinished(int nr, QNetworkReply *rply)
     }
 
     // ignore connection requests
-    if(requestMap[nr].type == QDROPBOX_REQ_CONNECT)
+    if(requestMap[nr].type == qdropbox_request_type::QDROPBOX_REQ_CONNECT)
     {
 #ifdef QTDROPBOX_DEBUG
         qDebug() << "- answer to connection request ignored" << endl;
@@ -216,13 +216,13 @@ void QDropbox::requestFinished(int nr, QNetworkReply *rply)
 #endif
         int oldnr = nr;
         nr = sendRequest(newlocation, requestMap[nr].method, 0, requestMap[nr].host);
-        requestMap[nr].type = QDROPBOX_REQ_REDIREC;
+        requestMap[nr].type = qdropbox_request_type::QDROPBOX_REQ_REDIREC;
         requestMap[nr].linked = oldnr;
         return;
     }
     else
     {
-        if(requestMap[nr].type == QDROPBOX_REQ_REDIREC)
+        if(requestMap[nr].type == qdropbox_request_type::QDROPBOX_REQ_REDIREC)
         {
             // change values if this is the answert to a redirect
             qdropbox_request redir = requestMap[nr];
@@ -235,54 +235,54 @@ void QDropbox::requestFinished(int nr, QNetworkReply *rply)
         // standard handling depending on message type
         switch(requestMap[nr].type)
         {
-        case QDROPBOX_REQ_CONNECT:
+        case qdropbox_request_type::QDROPBOX_REQ_CONNECT:
             // was only a connect request - so drop it
             break;
-        case QDROPBOX_REQ_RQTOKEN:
+        case qdropbox_request_type::QDROPBOX_REQ_RQTOKEN:
             // requested a tiken
             responseTokenRequest(response);
             break;
-        case QDROPBOX_REQ_RQBTOKN:
+        case qdropbox_request_type::QDROPBOX_REQ_RQBTOKN:
             responseBlockedTokenRequest(response);
             break;
-        case QDROPBOX_REQ_AULOGIN:
+        case qdropbox_request_type::QDROPBOX_REQ_AULOGIN:
             delayed_nr = responseDropboxLogin(response, nr);
             delayed_finish = true;
             break;
-        case QDROPBOX_REQ_ACCTOKN:
+        case qdropbox_request_type::QDROPBOX_REQ_ACCTOKN:
             responseAccessToken(response);
             break;
-        case QDROPBOX_REQ_METADAT:
+        case qdropbox_request_type::QDROPBOX_REQ_METADAT:
             parseMetadata(response);
             break;
-        case QDROPBOX_REQ_BMETADA:
+        case qdropbox_request_type::QDROPBOX_REQ_BMETADA:
             parseBlockingMetadata(response);
             break;
-        case QDROPBOX_REQ_BACCTOK:
+        case qdropbox_request_type::QDROPBOX_REQ_BACCTOK:
             responseBlockingAccessToken(response);
             break;
-        case QDROPBOX_REQ_ACCINFO:
+        case qdropbox_request_type::QDROPBOX_REQ_ACCINFO:
             parseAccountInfo(response);
             break;
-        case QDROPBOX_REQ_BACCINF:
+        case qdropbox_request_type::QDROPBOX_REQ_BACCINF:
             parseBlockingAccountInfo(response);
             break;
-        case QDROPBOX_REQ_SHRDLNK:
+        case qdropbox_request_type::QDROPBOX_REQ_SHRDLNK:
             parseSharedLink(response);
             break;
-        case QDROPBOX_REQ_BSHRDLN:
+        case qdropbox_request_type::QDROPBOX_REQ_BSHRDLN:
             parseBlockingSharedLink(response);
             break;
-        case QDROPBOX_REQ_REVISIO:
+        case qdropbox_request_type::QDROPBOX_REQ_REVISIO:
             parseRevisions(response);
             break;
-        case QDROPBOX_REQ_BREVISI:
+        case qdropbox_request_type::QDROPBOX_REQ_BREVISI:
             parseBlockingRevisions(response);
             break;
-        case QDROPBOX_REQ_DELTA:
+        case qdropbox_request_type::QDROPBOX_REQ_DELTA:
             parseDelta(response);
             break;
-        case QDROPBOX_REQ_BDELTA:
+        case qdropbox_request_type::QDROPBOX_REQ_BDELTA:
             parseBlockingDelta(response);
             break;
         default:
@@ -427,8 +427,8 @@ int QDropbox::sendRequest(QUrl request, const QString &type, QByteArray postdata
         reqnr = conManager.setHost(host, QHttp::ConnectionModeHttps);
     else
         reqnr = conManager.setHost(host, QHttp::ConnectionModeHttp);
-    requestMap[reqnr].type   = QDROPBOX_REQ_CONNECT;
-    requestMap[reqnr].method = "";*/
+    requestMap[reqnr].type   = qdropbox_request_type::QDROPBOX_REQ_CONNECT;
+    requestMap[reqnr].method;*/
 
     QString req_str = request.toString(QUrl::RemoveAuthority|QUrl::RemoveScheme);
     if(!req_str.startsWith("/"))
@@ -757,11 +757,11 @@ int QDropbox::requestToken(bool blocking)
     int reqnr = sendRequest(url);
     if(blocking)
     {
-        requestMap[reqnr].type = QDROPBOX_REQ_RQBTOKN;
+        requestMap[reqnr].type = qdropbox_request_type::QDROPBOX_REQ_RQBTOKN;
         startEventLoop();
     }
     else
-        requestMap[reqnr].type = QDROPBOX_REQ_RQTOKEN;
+        requestMap[reqnr].type = qdropbox_request_type::QDROPBOX_REQ_RQTOKEN;
 
     return reqnr;
 }
@@ -785,7 +785,7 @@ int QDropbox::authorize(const QString &email, const QString &pwd)
     query.addQueryItem("oauth_token", oauthToken);
     dropbox_authorize.setQuery(query);
     int reqnr = sendRequest(dropbox_authorize, "GET", 0, "www.dropbox.com");
-    requestMap[reqnr].type = QDROPBOX_REQ_AULOGIN;
+    requestMap[reqnr].type = qdropbox_request_type::QDROPBOX_REQ_AULOGIN;
     mail     = email;
     password = pwd;
     return reqnr;
@@ -846,11 +846,11 @@ int QDropbox::requestAccessToken(bool blocking)
 
     if(blocking)
     {
-        requestMap[reqnr].type = QDROPBOX_REQ_BACCTOK;
+        requestMap[reqnr].type = qdropbox_request_type::QDROPBOX_REQ_BACCTOK;
         startEventLoop();
     }
     else
-        requestMap[reqnr].type = QDROPBOX_REQ_ACCTOKN;
+        requestMap[reqnr].type = qdropbox_request_type::QDROPBOX_REQ_ACCTOKN;
 
     return reqnr;
 }
@@ -890,11 +890,11 @@ void QDropbox::requestAccountInfo(bool blocking)
     int reqnr = sendRequest(url);
     if(blocking)
     {
-        requestMap[reqnr].type = QDROPBOX_REQ_BACCINF;
+        requestMap[reqnr].type = qdropbox_request_type::QDROPBOX_REQ_BACCINF;
         startEventLoop();
     }
     else
-        requestMap[reqnr].type = QDROPBOX_REQ_ACCINFO;
+        requestMap[reqnr].type = qdropbox_request_type::QDROPBOX_REQ_ACCINFO;
     return;
 }
 
@@ -940,11 +940,11 @@ void QDropbox::requestMetadata(const QString &file, bool blocking)
     int reqnr = sendRequest(url);
     if(blocking)
     {
-        requestMap[reqnr].type = QDROPBOX_REQ_BMETADA;
+        requestMap[reqnr].type = qdropbox_request_type::QDROPBOX_REQ_BMETADA;
         startEventLoop();
     }
     else
-        requestMap[reqnr].type = QDROPBOX_REQ_METADAT;
+        requestMap[reqnr].type = qdropbox_request_type::QDROPBOX_REQ_METADAT;
     //QDropboxFileInfo fi(_tempJson.strContent(), this);
     return;
 }
@@ -980,11 +980,11 @@ void QDropbox::requestSharedLink(const QString &file, bool blocking)
     int reqnr = sendRequest(url);
     if(blocking)
     {
-        requestMap[reqnr].type = QDROPBOX_REQ_BSHRDLN;
+        requestMap[reqnr].type = qdropbox_request_type::QDROPBOX_REQ_BSHRDLN;
         startEventLoop();
     }
     else
-        requestMap[reqnr].type = QDROPBOX_REQ_SHRDLNK;
+        requestMap[reqnr].type = qdropbox_request_type::QDROPBOX_REQ_SHRDLNK;
 
     return;
 }
@@ -1042,11 +1042,11 @@ void QDropbox::requestDelta(const QString &cursor, const QString &path_prefix, b
 
     if(blocking)
     {
-        requestMap[reqnr].type = QDROPBOX_REQ_BDELTA;
+        requestMap[reqnr].type = qdropbox_request_type::QDROPBOX_REQ_BDELTA;
         startEventLoop();
     }
     else
-        requestMap[reqnr].type = QDROPBOX_REQ_DELTA;
+        requestMap[reqnr].type = qdropbox_request_type::QDROPBOX_REQ_DELTA;
     return;
 }
 
@@ -1128,11 +1128,11 @@ void QDropbox::checkReleaseEventLoop(int reqnr)
 {
     switch(requestMap[reqnr].type)
     {
-    case QDROPBOX_REQ_RQBTOKN:
-    case QDROPBOX_REQ_BACCTOK:
-    case QDROPBOX_REQ_BACCINF:
-    case QDROPBOX_REQ_BMETADA:
-    case QDROPBOX_REQ_BREVISI:
+    case qdropbox_request_type::QDROPBOX_REQ_RQBTOKN:
+    case qdropbox_request_type::QDROPBOX_REQ_BACCTOK:
+    case qdropbox_request_type::QDROPBOX_REQ_BACCINF:
+    case qdropbox_request_type::QDROPBOX_REQ_BMETADA:
+    case qdropbox_request_type::QDROPBOX_REQ_BREVISI:
         stopEventLoop(); // release local event loop
         break;
     default:
@@ -1166,11 +1166,11 @@ void QDropbox::requestRevisions(const QString &file, int max, bool blocking)
     int reqnr = sendRequest(url);
     if(blocking)
     {
-        requestMap[reqnr].type = QDROPBOX_REQ_BREVISI;
+        requestMap[reqnr].type = qdropbox_request_type::QDROPBOX_REQ_BREVISI;
         startEventLoop();
     }
     else
-        requestMap[reqnr].type = QDROPBOX_REQ_REVISIO;
+        requestMap[reqnr].type = qdropbox_request_type::QDROPBOX_REQ_REVISIO;
 
     return;
 }
@@ -1229,7 +1229,7 @@ void QDropbox::clearError()
 
 qdropbox_request QDropbox::requestInfo(int rqnr)
 {
-    qdropbox_request request{ QDROPBOX_REQ_INVALID, "", "", 0 };
+    qdropbox_request request{ qdropbox_request_type::QDROPBOX_REQ_INVALID, "", "", 0 };
 
     if (!requestMap.contains(rqnr)) {
         return request; // invalid request
