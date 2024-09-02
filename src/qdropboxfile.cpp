@@ -17,7 +17,7 @@ QDropboxFile::QDropboxFile(QDropbox *api, QObject *parent) :
     connectSignals();
 }
 
-QDropboxFile::QDropboxFile(QString filename, QDropbox *api, QObject *parent) :
+QDropboxFile::QDropboxFile(const QString &filename, QDropbox *api, QObject *parent) :
     QIODevice(parent),
     _conManager(this)
 {
@@ -107,13 +107,13 @@ QDropbox *QDropboxFile::api()
     return _api;
 }
 
-void QDropboxFile::setFilename(QString filename)
+void QDropboxFile::setFilename(const QString &filename)
 {
     _filename = filename;
     return;
 }
 
-QString QDropboxFile::filename()
+const QString &QDropboxFile::filename()
 {
     return _filename;
 }
@@ -272,7 +272,7 @@ bool QDropboxFile::isMode(QIODevice::OpenMode mode)
     return ( (openMode()&mode) == mode );
 }
 
-bool QDropboxFile::getFileContent(QString filename)
+bool QDropboxFile::getFileContent(const QString &filename)
 {
 #ifdef QTDROPBOX_DEBUG
     qDebug() << "QDropboxFile::getFileContent(...)" << endl;
@@ -498,7 +498,7 @@ bool QDropboxFile::putFile()
     return true;
 }
 
-void QDropboxFile::_init(QDropbox *api, QString filename, qint64 bufferTh)
+void QDropboxFile::_init(QDropbox *api, const QString &filename, qint64 bufferTh)
 {
     _api              = api;
     _buffer           = NULL;

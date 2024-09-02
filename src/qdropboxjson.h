@@ -75,7 +75,7 @@ public:
       \param strJson JSON as string.
       \param parent Parent QObject.
      */
-    QDropboxJson(QString strJson, QObject *parent = 0);
+    QDropboxJson(const QString &strJson, QObject *parent = nullptr);
 
     /*!
       Copies the data of another QDropboxJSon.
@@ -107,9 +107,9 @@ public:
       Interprets a string as JSON - or at least tries to. If this is not possible
       the QDropboxJson will be invalidated.
 
-      \parem strJson JSON in string representation.
+      \parem jsonStr JSON in string representation.
      */
-    void parseString(QString strJson);
+    void parseString(const QString &jsonStr);
 
     /*!
       Drops all stored JSON data.
@@ -127,66 +127,66 @@ public:
 
       \param key The requested key.
      */
-    bool hasKey(QString key);
+    bool hasKey(const QString &key);
 
     /*!
       Returns the data type of the value mapped to the key.
       \param key The key to be checked.
      */
-    DataType type(QString key);
+    DataType type(const QString &key);
 
     /*!
       Returns a stored integer value identified by the given key. If the key does
       not map 0 is returned. If the force flag is set the check of the data type
       is omitted and it is tried to convert the value regardless of the real data type.
      */
-    qint64 getInt(QString key, bool force = false);
+    qint64 getInt(const QString &key, bool force = false);
 
-    void setInt(QString key, qint64 value);
+    void setInt(const QString &key, qint64 value);
 
     /*!
       Returns a stored unsigned integer value identified by the given key. If the key does
       not map 0 is returned. If the force flag is set the check of the data type
       is omitted and it is tried to convert the value regardless of the real data type.
      */
-    quint64       getUInt(QString key, bool force = false);
+    quint64       getUInt(const QString &key, bool force = false);
 
-    void setUInt(QString key, quint64 value);
+    void setUInt(const QString &key, quint64 value);
 
     /*!
       Returns a stored string value identified by the given key. If the key does
-      not map an empty QString is returned. If the force flag is set the check of the data type
+      not map an empty const QString &is returned. If the force flag is set the check of the data type
       is omitted and it is tried to convert the value regardless of the real data type.
      */
-    QString       getString(QString key, bool force = false);
+    QString getString(const QString &key, bool force = false);
 
-    void setString(QString key, QString value);
+    void setString(const QString &key, const QString &value);
 
     /*!
       Returns a sub JSON identified by the given key. If the key does not map to a
       JSON a NULL pointer will be returned. It is not possible to force a conversion.
      */
-    QDropboxJson *getJson(QString key);
+    QDropboxJson *getJson(const QString &key);
 
-    void setJson(QString key, QDropboxJson value);
+    void setJson(const QString &key, QDropboxJson value);
 
     /*!
       Returns a stored floating point value identified by the given key. If the key does
       not map 0.0 is returned. If the force flag is set the check of the data type
       is omitted and it is tried to convert the value regardless of the real data type.
      */
-    double        getDouble(QString key, bool force = false);
+    double        getDouble(const QString &key, bool force = false);
 
-    void setDouble(QString key, double value);
+    void setDouble(const QString &key, double value);
 
     /*!
       Returns a stored boolean value identified by the given key. If the key does
       not map false is returned. If the force flag is set the check of the data type
       is omitted and it is tried to convert the value regardless of the real data type.
      */
-    bool          getBool(QString key, bool force = false);
+    bool          getBool(const QString &key, bool force = false);
 
-    void setBool(QString key, bool value);
+    void setBool(const QString &key, bool value);
 
     /*!
       Returns the stored JSON's string representation.
@@ -197,20 +197,20 @@ public:
       Returns a stored string values as QDateTime timestamp. The timestamp will be invalid
       if the string could not be converted.
     */
-    QDateTime getTimestamp(QString key, bool force = false);
+    QDateTime getTimestamp(const QString &key, bool force = false);
 
-    void setTimestamp(QString key, QDateTime value);
+    void setTimestamp(const QString &key, QDateTime value);
 
     /*!
       Returnes a stored array as a list of string items. If the key does not exist or is not
       stored as array the function returns an empty list. If you need the items in a specific
       data type you have to do equivalent casting your self!
     */
-    QStringList getArray(QString key, bool force = false);
+    QStringList getArray(const QString &key, bool force = false);
 
     /*!
       Returns the content of a stored array as a list of string items <i>if the JSON contains
-      an anynmous array</i> (see also isAnonymousArray()). As with getArray(QString key, bool force = false)
+      an anynmous array</i> (see also isAnonymousArray()). As with getArray(const QString &key, bool force = false)
       you have to parse the content of the array your self.
     */
     QStringList getArray();
@@ -251,8 +251,8 @@ private:
     bool _anonymousArray;
 
     void emptyList();
-    qdropboxjson_entry_type interpretType(QString value);
-    int parseSubJson(QString str, int start, qdropboxjson_entry *jsonEntry);
+    qdropboxjson_entry_type interpretType(const QString &value);
+    int parseSubJson(const QString &str, int start, qdropboxjson_entry *jsonEntry);
     void _init();
 };
 

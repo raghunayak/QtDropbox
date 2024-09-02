@@ -6,7 +6,7 @@ QDropboxFileInfo::QDropboxFileInfo(QObject *parent) :
   _init();
 }
 
-QDropboxFileInfo::QDropboxFileInfo(QString jsonStr, QObject *parent) :
+QDropboxFileInfo::QDropboxFileInfo(const QString &jsonStr, QObject *parent) :
     QDropboxJson(jsonStr, parent)
 {
     _init();
@@ -99,7 +99,7 @@ void QDropboxFileInfo::_init()
     return;
 }
 
-QString QDropboxFileInfo::revisionHash()  const
+const QString &QDropboxFileInfo::revisionHash()  const
 {
     return _revisionHash;
 }
@@ -110,7 +110,7 @@ bool QDropboxFileInfo::isDeleted()  const
 }
 
 
-QString QDropboxFileInfo::mimeType()  const
+const QString &QDropboxFileInfo::mimeType()  const
 {
     return _mimeType;
 }
@@ -120,17 +120,17 @@ bool QDropboxFileInfo::isDir()  const
     return _isDir;
 }
 
-QString QDropboxFileInfo::path()  const
+const QString &QDropboxFileInfo::path()  const
 {
     return _path;
 }
 
-QString QDropboxFileInfo::root()  const
+const QString &QDropboxFileInfo::root()  const
 {
     return _root;
 }
 
-QString QDropboxFileInfo::icon()  const
+const QString &QDropboxFileInfo::icon()  const
 {
     return _icon;
 }
@@ -160,7 +160,7 @@ quint64 QDropboxFileInfo::revision() const
     return _revision;
 }
 
-QString QDropboxFileInfo::size() const
+const QString &QDropboxFileInfo::size() const
 {
     return _size;
 }

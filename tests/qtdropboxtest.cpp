@@ -247,7 +247,7 @@ void QtDropboxTest::dropboxCase2()
     QDropbox dropbox(APP_KEY, APP_SECRET);
     QVERIFY2(connectDropbox(&dropbox, QDropbox::Plaintext), "connection error");
 
-    QString cursor = "";
+    QString cursor;
     bool hasMore = true;
     QDropboxFileInfoMap file_cache;
 

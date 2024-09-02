@@ -8,7 +8,7 @@ QDropboxJson::QDropboxJson(QObject *parent) :
     _init();
 }
 
-QDropboxJson::QDropboxJson(QString strJson, QObject *parent) :
+QDropboxJson::QDropboxJson(const QString &strJson, QObject *parent) :
     QObject(parent)
 {
     _init();
@@ -33,8 +33,9 @@ void QDropboxJson::_init()
     _anonymousArray = false;
 }
 
-void QDropboxJson::parseString(QString strJson)
+void QDropboxJson::parseString(const QString &jsonStr)
 {
+    QString strJson = jsonStr;
 #ifdef QTDROPBOX_DEBUG
     qDebug() << "parse string = " << strJson << endl;
 #endif
@@ -68,9 +69,9 @@ void QDropboxJson::parseString(QString strJson)
         }
     }
 
-    QString buffer   = "";
-    QString key      = "";
-    QString value    = "";
+    QString buffer;
+    QString key;
+    QString value;
 
     bool isKey       = true;
     bool insertValue = false;
@@ -275,12 +276,12 @@ bool QDropboxJson::isValid()
     return valid;
 }
 
-bool QDropboxJson::hasKey(QString key)
+bool QDropboxJson::hasKey(const QString &key)
 {
     return valueMap.contains(key);
 }
 
-QDropboxJson::DataType QDropboxJson::type(QString key)
+QDropboxJson::DataType QDropboxJson::type(const QString &key)
 {
     if(!valueMap.contains(key))
         return UnknownType;
@@ -310,7 +311,7 @@ QDropboxJson::DataType QDropboxJson::type(QString key)
     return UnknownType;
 }
 
-qint64 QDropboxJson::getInt(QString key, bool force)
+qint64 QDropboxJson::getInt(const QString &key, bool force)
 {
     if(!valueMap.contains(key))
         return 0;
@@ -324,7 +325,7 @@ qint64 QDropboxJson::getInt(QString key, bool force)
     return e.value.value->toInt();
 }
 
-void QDropboxJson::setInt(QString key, qint64 value)
+void QDropboxJson::setInt(const QString &key, qint64 value)
 {
     if(valueMap.contains(key)){
         valueMap[key].value.value->setNum(value);
@@ -338,7 +339,7 @@ void QDropboxJson::setInt(QString key, qint64 value)
     }
 }
 
-quint64 QDropboxJson::getUInt(QString key, bool force)
+quint64 QDropboxJson::getUInt(const QString &key, bool force)
 {
     if(!valueMap.contains(key))
         return 0;
@@ -352,7 +353,7 @@ quint64 QDropboxJson::getUInt(QString key, bool force)
     return e.value.value->toUInt();
 }
 
-void QDropboxJson::setUInt(QString key, quint64 value)
+void QDropboxJson::setUInt(const QString &key, quint64 value)
 {
     if(valueMap.contains(key)){
         valueMap[key].value.value->setNum(value);
@@ -366,7 +367,7 @@ void QDropboxJson::setUInt(QString key, quint64 value)
     }
 }
 
-QString QDropboxJson::getString(QString key, bool force)
+QString QDropboxJson::getString(const QString &key, bool force)
 {
     if(!valueMap.contains(key))
         return "";
@@ -381,7 +382,7 @@ QString QDropboxJson::getString(QString key, bool force)
     return value;
 }
 
-void QDropboxJson::setString(QString key, QString value)
+void QDropboxJson::setString(const QString &key, const QString &value)
 {
     if(valueMap.contains(key)){
         *(valueMap[key].value.value) = value;
@@ -394,7 +395,7 @@ void QDropboxJson::setString(QString key, QString value)
     }
 }
 
-QDropboxJson* QDropboxJson::getJson(QString key)
+QDropboxJson* QDropboxJson::getJson(const QString &key)
 {
     if(!valueMap.contains(key))
         return NULL;
@@ -409,7 +410,7 @@ QDropboxJson* QDropboxJson::getJson(QString key)
     return e.value.json;
 }
 
-void QDropboxJson::setJson(QString key, QDropboxJson value)
+void QDropboxJson::setJson(const QString &key, QDropboxJson value)
 {
     if(valueMap.contains(key)){
         *(valueMap[key].value.json) = value;
@@ -422,7 +423,7 @@ void QDropboxJson::setJson(QString key, QDropboxJson value)
     }
 }
 
-double QDropboxJson::getDouble(QString key, bool force)
+double QDropboxJson::getDouble(const QString &key, bool force)
 {
     if(!valueMap.contains(key))
         return 0.0f;
@@ -436,7 +437,7 @@ double QDropboxJson::getDouble(QString key, bool force)
     return e.value.value->toDouble();
 }
 
-void QDropboxJson::setDouble(QString key, double value)
+void QDropboxJson::setDouble(const QString &key, double value)
 {
     if(valueMap.contains(key)){
         valueMap[key].value.value->setNum(value);
@@ -450,7 +451,7 @@ void QDropboxJson::setDouble(QString key, double value)
     }
 }
 
-bool QDropboxJson::getBool(QString key, bool force)
+bool QDropboxJson::getBool(const QString &key, bool force)
 {
     if(!valueMap.contains(key))
         return false;
@@ -467,7 +468,7 @@ bool QDropboxJson::getBool(QString key, bool force)
     return true;
 }
 
-void QDropboxJson::setBool(QString key, bool value)
+void QDropboxJson::setBool(const QString &key, bool value)
 {
     if(valueMap.contains(key)){
         *(valueMap[key].value.value) = value ? "true" : "false";
@@ -480,7 +481,7 @@ void QDropboxJson::setBool(QString key, bool value)
     }
 }
 
-QDateTime QDropboxJson::getTimestamp(QString key, bool force)
+QDateTime QDropboxJson::getTimestamp(const QString &key, bool force)
 {
     if(!valueMap.contains(key))
         return QDateTime();
@@ -499,7 +500,7 @@ QDateTime QDropboxJson::getTimestamp(QString key, bool force)
     return res;
 }
 
-void QDropboxJson::setTimestamp(QString key, QDateTime value)
+void QDropboxJson::setTimestamp(const QString &key, QDateTime value)
 {
     const QString dtFormat = "ddd, dd MMM yyyy hh:mm:ss '+0000'";
 
@@ -558,7 +559,7 @@ void QDropboxJson::emptyList()
     return;
 }
 
-qdropboxjson_entry_type QDropboxJson::interpretType(QString value)
+qdropboxjson_entry_type QDropboxJson::interpretType(const QString &value)
 {
     // check for string
     if(value.startsWith("\"") && value.endsWith("\""))
@@ -597,7 +598,7 @@ QDropboxJson& QDropboxJson::operator=(QDropboxJson& other)
     return *this;
 }
 
-QStringList QDropboxJson::getArray(QString key, bool force)
+QStringList QDropboxJson::getArray(const QString &key, bool force)
 {
     QStringList list;
     if(!valueMap.contains(key))
@@ -610,7 +611,7 @@ QStringList QDropboxJson::getArray(QString key, bool force)
         return list;
 
     QString arrayStr = e.value.value->mid(1, e.value.value->length()-2);
-    QString buffer = "";
+    QString buffer;
     bool inString = false;
     int  inJson   = 0;
     int  inArray  = 0;
@@ -659,7 +660,7 @@ QStringList QDropboxJson::getArray(QString key, bool force)
     return list;
 }
 
-int QDropboxJson::parseSubJson(QString strJson, int start, qdropboxjson_entry *jsonEntry)
+int QDropboxJson::parseSubJson(const QString &strJson, int start, qdropboxjson_entry *jsonEntry)
 {
     int openBrackets = 1;
     QString buffer;

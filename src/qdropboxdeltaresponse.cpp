@@ -6,7 +6,7 @@ QDropboxDeltaResponse::QDropboxDeltaResponse()
     _init();
 }
 
-QDropboxDeltaResponse::QDropboxDeltaResponse(QString response)
+QDropboxDeltaResponse::QDropboxDeltaResponse(const QString &response)
 {
     _init();
 
@@ -44,7 +44,7 @@ bool QDropboxDeltaResponse::shouldReset() const
     return this->_reset;
 }
 
-QString QDropboxDeltaResponse::getNextCursor() const
+const QString &QDropboxDeltaResponse::getNextCursor() const
 {
     return this->_cursor;
 }

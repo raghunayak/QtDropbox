@@ -9,7 +9,7 @@ QDropboxAccount::QDropboxAccount(QObject *parent) :
     _uid         = 0;
 }
 
-QDropboxAccount::QDropboxAccount(QString jsonString, QObject *parent) :
+QDropboxAccount::QDropboxAccount(const QString &jsonString, QObject *parent) :
     QDropboxJson(jsonString, parent)
 {
     _init();
@@ -87,7 +87,7 @@ QUrl QDropboxAccount::referralLink()  const
     return _referralLink;
 }
 
-QString QDropboxAccount::displayName()  const
+const QString &QDropboxAccount::displayName()  const
 {
     return _displayName;
 }
@@ -97,12 +97,12 @@ qint64 QDropboxAccount::uid()  const
     return _uid;
 }
 
-QString QDropboxAccount::country()  const
+const QString &QDropboxAccount::country()  const
 {
     return _country;
 }
 
-QString QDropboxAccount::email()  const
+const QString &QDropboxAccount::email()  const
 {
     return _email;
 }

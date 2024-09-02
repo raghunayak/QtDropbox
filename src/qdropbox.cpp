@@ -28,7 +28,7 @@ QDropbox::QDropbox(QObject *parent) :
     _saveFinishedRequests = false;
 }
 
-QDropbox::QDropbox(QString key, QString sharedSecret, OAuthMethod method, QString url, QObject *parent) :
+QDropbox::QDropbox(const QString &key, const QString &sharedSecret, OAuthMethod method, const QString &url, QObject *parent) :
     QObject(parent),
     conManager(this)
 {
@@ -54,7 +54,7 @@ QDropbox::QDropbox(QString key, QString sharedSecret, OAuthMethod method, QStrin
     // needed for nonce generation
     qsrand(QDateTime::currentMSecsSinceEpoch());
 
-    _evLoop = NULL;
+    _evLoop = nullptr;
     _saveFinishedRequests = false;
 }
 
@@ -63,12 +63,12 @@ QDropbox::Error QDropbox::error()
     return errorState;
 }
 
-QString QDropbox::errorString()
+const QString &QDropbox::errorString()
 {
     return errorText;
 }
 
-void QDropbox::setApiUrl(QString url)
+void QDropbox::setApiUrl(const QString &url)
 {
     apiurl.setUrl(QString("//%1").arg(url));
     prepareApiUrl();
@@ -92,7 +92,7 @@ QDropbox::OAuthMethod QDropbox::authMethod()
     return oauthMethod;
 }
 
-void QDropbox::setApiVersion(QString apiversion)
+void QDropbox::setApiVersion(const QString &apiversion)
 {
     if(apiversion.compare("1.0"))
     {
@@ -326,8 +326,9 @@ void QDropbox::networkReplyFinished(QNetworkReply *rply)
 }
 
 
-QString QDropbox::hmacsha1(QString baseString, QString key)
+QString QDropbox::hmacsha1(const QString &baseString, const QString &inKey)
 {
+    QString key = inKey;
     int blockSize = 64; // HMAC-::hmacsha1SHA-1 block size, defined in SHA-1 standard
     if (key.length() > blockSize) { // if key is longer than block size (64), reduce key length with SHA-1 compression
         key = QCryptographicHash::hash(key.toLatin1(), QCryptographicHash::Sha1);
@@ -354,13 +355,13 @@ QString QDropbox::hmacsha1(QString baseString, QString key)
 
 QString QDropbox::generateNonce(qint32 length)
 {
-    QString clng = "";
+    QString clng;
     for(int i=0; i<length; ++i)
         clng += QString::number(int( qrand() / (RAND_MAX + 1.0) * (16 + 1 - 0) + 0 ), 16).toUpper();
     return clng;
 }
 
-QString QDropbox::oAuthSign(QUrl base, QString method)
+QString QDropbox::oAuthSign(const QUrl &base, const QString &method)
 {
     if(oauthMethod == QDropbox::Plaintext){
 #ifdef QTDROPBOX_DEBUG
@@ -369,7 +370,7 @@ QString QDropbox::oAuthSign(QUrl base, QString method)
         return QString("%1&%2").arg(_appSharedSecret).arg(oauthTokenSecret);
     }
 
-    QString param   = base.toString(QUrl::RemoveAuthority|QUrl::RemovePath|QUrl::RemoveScheme).mid(1);
+    QString param = base.toString(QUrl::RemoveAuthority|QUrl::RemovePath|QUrl::RemoveScheme).mid(1);
     param = QUrl::toPercentEncoding(param);
     QString requrl  = base.toString(QUrl::RemoveQuery);
     requrl = QUrl::toPercentEncoding(requrl);
@@ -383,7 +384,7 @@ QString QDropbox::oAuthSign(QUrl base, QString method)
     qDebug() << "key = " << key << " endkey";
 #endif
 
-    QString signature = "";
+    QString signature;
     if(oauthMethod == QDropbox::HMACSHA1)
         signature = hmacsha1(baseurl.toUtf8(), key.toUtf8());
     else
@@ -413,7 +414,7 @@ void QDropbox::prepareApiUrl()
     //  apiurl.setScheme("http");
 }
 
-int QDropbox::sendRequest(QUrl request, QString type, QByteArray postdata, QString host)
+int QDropbox::sendRequest(QUrl request, const QString &type, QByteArray postdata, QString host)
 {
     if(!host.trimmed().compare(""))
         host = apiurl.toString(QUrl::RemoveScheme).mid(2);
@@ -466,14 +467,14 @@ int QDropbox::sendRequest(QUrl request, QString type, QByteArray postdata, QStri
     return lastreply;
 }
 
-void QDropbox::responseTokenRequest(QString response)
+void QDropbox::responseTokenRequest(const QString &response)
 {
     parseToken(response);
     emit requestTokenFinished(oauthToken, oauthTokenSecret);
     return;
 }
 
-int QDropbox::responseDropboxLogin(QString response, int reqnr)
+int QDropbox::responseDropboxLogin(const QString &response, int reqnr)
 {
     Q_UNUSED(reqnr);
 
@@ -492,7 +493,7 @@ int QDropbox::responseDropboxLogin(QString response, int reqnr)
     return 0;
 }
 
-void QDropbox::responseAccessToken(QString response)
+void QDropbox::responseAccessToken(const QString &response)
 {
     parseToken(response);
     emit accessTokenFinished(oauthToken, oauthTokenSecret);
@@ -520,7 +521,7 @@ QString QDropbox::signatureMethodString()
     return sigmeth;
 }
 
-void QDropbox::parseToken(QString response)
+void QDropbox::parseToken(const QString &response)
 {
     clearError();
 #ifdef QTDROPBOX_DEBUG
@@ -564,7 +565,7 @@ void QDropbox::parseToken(QString response)
     return;
 }
 
-void QDropbox::parseAccountInfo(QString response)
+void QDropbox::parseAccountInfo(const QString &response)
 {
 #ifdef QTDROPBOX_DEBUG
     qDebug() << "== account info ==" << response << "== account info end ==";
@@ -588,7 +589,7 @@ void QDropbox::parseAccountInfo(QString response)
     return;
 }
 
-void QDropbox::parseSharedLink(QString response)
+void QDropbox::parseSharedLink(const QString &response)
 {
 #ifdef QTDROPBOX_DEBUG
     qDebug() << "== shared link ==" << response << "== shared link end ==";
@@ -611,7 +612,7 @@ void QDropbox::parseSharedLink(QString response)
     emit sharedLinkReceived(response);
 }
 
-void QDropbox::parseMetadata(QString response)
+void QDropbox::parseMetadata(const QString &response)
 {
 #ifdef QTDROPBOX_DEBUG
     qDebug() << "== metadata ==" << response << "== metadata end ==";
@@ -636,7 +637,7 @@ void QDropbox::parseMetadata(QString response)
     return;
 }
 
-void QDropbox::parseDelta(QString response)
+void QDropbox::parseDelta(const QString &response)
 {
 #ifdef QTDROPBOX_DEBUG
     qDebug() << "== metadata ==" << response << "== metadata end ==";
@@ -661,7 +662,7 @@ void QDropbox::parseDelta(QString response)
     return;
 }
 
-void QDropbox::setKey(QString key)
+void QDropbox::setKey(const QString &key)
 {
 #ifdef QTDROPBOX_DEBUG
     qDebug() << "appKey = " << key;
@@ -669,12 +670,12 @@ void QDropbox::setKey(QString key)
     _appKey = key;
 }
 
-QString QDropbox::key()
+const QString &QDropbox::key()
 {
     return _appKey;
 }
 
-void QDropbox::setSharedSecret(QString sharedSecret)
+void QDropbox::setSharedSecret(const QString &sharedSecret)
 {
 #ifdef QTDROPBOX_DEBUG
     qDebug() << "appSharedSecret = " << sharedSecret;
@@ -682,22 +683,22 @@ void QDropbox::setSharedSecret(QString sharedSecret)
     _appSharedSecret = sharedSecret;
 }
 
-QString QDropbox::sharedSecret()
+const QString &QDropbox::sharedSecret()
 {
     return _appSharedSecret;
 }
 
-void QDropbox::setToken(QString t)
+void QDropbox::setToken(const QString &t)
 {
     oauthToken = t;
 }
 
-QString QDropbox::token()
+const QString &QDropbox::token()
 {
     return oauthToken;
 }
 
-void QDropbox::setTokenSecret(QString s)
+void QDropbox::setTokenSecret(const QString &s)
 {
 #ifdef QTDROPBOX_DEBUG
     qDebug() << "oauthTokenSecret = " << oauthTokenSecret;
@@ -705,22 +706,22 @@ void QDropbox::setTokenSecret(QString s)
     oauthTokenSecret = s;
 }
 
-QString QDropbox::tokenSecret()
+const QString &QDropbox::tokenSecret()
 {
     return oauthTokenSecret;
 }
 
-QString QDropbox::appKey()
+const QString &QDropbox::appKey()
 {
     return _appKey;
 }
 
-QString QDropbox::appSharedSecret()
+const QString &QDropbox::appSharedSecret()
 {
     return _appSharedSecret;
 }
 
-QString QDropbox::apiVersion()
+const QString &QDropbox::apiVersion()
 {
     return _version;
 }
@@ -771,7 +772,7 @@ bool QDropbox::requestTokenAndWait()
     return (error() == NoError);
 }
 
-int QDropbox::authorize(QString email, QString pwd)
+int QDropbox::authorize(const QString &email, const QString &pwd)
 {
     QUrl dropbox_authorize;
     dropbox_authorize.setPath(QString("/%1/oauth/authorize")
@@ -905,7 +906,7 @@ QDropboxAccount QDropbox::requestAccountInfoAndWait()
     return _account;
 }
 
-void QDropbox::parseBlockingAccountInfo(QString response)
+void QDropbox::parseBlockingAccountInfo(const QString &response)
 {
     clearError();
     parseAccountInfo(response);
@@ -913,7 +914,7 @@ void QDropbox::parseBlockingAccountInfo(QString response)
     return;
 }
 
-void QDropbox::requestMetadata(QString file, bool blocking)
+void QDropbox::requestMetadata(const QString &file, bool blocking)
 {
     clearError();
 
@@ -948,14 +949,14 @@ void QDropbox::requestMetadata(QString file, bool blocking)
     return;
 }
 
-QDropboxFileInfo QDropbox::requestMetadataAndWait(QString file)
+QDropboxFileInfo QDropbox::requestMetadataAndWait(const QString &file)
 {
     requestMetadata(file, true);
     QDropboxFileInfo fi(_tempJson.strContent(), this);
     return fi;
 }
 
-void QDropbox::requestSharedLink(QString file, bool blocking)
+void QDropbox::requestSharedLink(const QString &file, bool blocking)
 {
     clearError();
 
@@ -988,7 +989,7 @@ void QDropbox::requestSharedLink(QString file, bool blocking)
     return;
 }
 
-QUrl QDropbox::requestSharedLinkAndWait(QString file)
+QUrl QDropbox::requestSharedLinkAndWait(const QString &file)
 {
     requestSharedLink(file,true);
     QDropboxJson json(_tempJson.strContent());
@@ -996,7 +997,7 @@ QUrl QDropbox::requestSharedLinkAndWait(QString file)
     return QUrl(urlString);
 }
 
-void QDropbox::requestDelta(QString cursor, QString path_prefix, bool blocking)
+void QDropbox::requestDelta(const QString &cursor, const QString &path_prefix, bool blocking)
 {
     clearError();
 
@@ -1049,7 +1050,7 @@ void QDropbox::requestDelta(QString cursor, QString path_prefix, bool blocking)
     return;
 }
 
-QDropboxDeltaResponse QDropbox::requestDeltaAndWait(QString cursor, QString path_prefix)
+QDropboxDeltaResponse QDropbox::requestDeltaAndWait(const QString &cursor, const QString &path_prefix)
 {
     requestDelta(cursor, path_prefix, true);
     QDropboxDeltaResponse r(_tempJson.strContent());
@@ -1082,7 +1083,7 @@ void QDropbox::stopEventLoop()
     return;
 }
 
-void QDropbox::responseBlockedTokenRequest(QString response)
+void QDropbox::responseBlockedTokenRequest(const QString &response)
 {
     clearError();
     responseTokenRequest(response);
@@ -1090,7 +1091,7 @@ void QDropbox::responseBlockedTokenRequest(QString response)
     return;
 }
 
-void QDropbox::responseBlockingAccessToken(QString response)
+void QDropbox::responseBlockingAccessToken(const QString &response)
 {
     clearError();
     responseAccessToken(response);
@@ -1098,7 +1099,7 @@ void QDropbox::responseBlockingAccessToken(QString response)
     return;
 }
 
-void QDropbox::parseBlockingMetadata(QString response)
+void QDropbox::parseBlockingMetadata(const QString &response)
 {
     clearError();
     parseMetadata(response);
@@ -1106,7 +1107,7 @@ void QDropbox::parseBlockingMetadata(QString response)
     return;
 }
 
-void QDropbox::parseBlockingDelta(QString response)
+void QDropbox::parseBlockingDelta(const QString &response)
 {
     clearError();
     parseDelta(response);
@@ -1114,7 +1115,7 @@ void QDropbox::parseBlockingDelta(QString response)
     return;
 }
 
-void QDropbox::parseBlockingSharedLink(QString response)
+void QDropbox::parseBlockingSharedLink(const QString &response)
 {
     clearError();
     parseSharedLink(response);
@@ -1140,7 +1141,7 @@ void QDropbox::checkReleaseEventLoop(int reqnr)
     return;
 }
 
-void QDropbox::requestRevisions(QString file, int max, bool blocking)
+void QDropbox::requestRevisions(const QString &file, int max, bool blocking)
 {
     clearError();
 
@@ -1174,7 +1175,7 @@ void QDropbox::requestRevisions(QString file, int max, bool blocking)
     return;
 }
 
-QList<QDropboxFileInfo> QDropbox::requestRevisionsAndWait(QString file, int max)
+QList<QDropboxFileInfo> QDropbox::requestRevisionsAndWait(const QString &file, int max)
 {
     clearError();
     requestRevisions(file, max, true);
@@ -1194,7 +1195,7 @@ QList<QDropboxFileInfo> QDropbox::requestRevisionsAndWait(QString file, int max)
     return revisionList;
 }
 
-void QDropbox::parseRevisions(QString response)
+void QDropbox::parseRevisions(const QString &response)
 {
     QDropboxJson json;
     _tempJson.parseString(response);
@@ -1211,7 +1212,7 @@ void QDropbox::parseRevisions(QString response)
     return;
 }
 
-void QDropbox::parseBlockingRevisions(QString response)
+void QDropbox::parseBlockingRevisions(const QString &response)
 {
     clearError();
     parseRevisions(response);

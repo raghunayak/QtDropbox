@@ -54,7 +54,7 @@ public:
       \param jsonStr metadata JSON in string representation
       \param parent pointer to the parent QObject
     */
-    QDropboxFileInfo(QString jsonStr, QObject *parent = 0);
+    QDropboxFileInfo(const QString &jsonStr, QObject *parent = 0);
 
     /*!
        Creates a copy of an other QDropboxFileInfo instance.
@@ -86,7 +86,7 @@ public:
     /*!
       Human readable file size.
     */
-    QString   size() const;
+    const QString &  size() const;
 
     /*!
       Current revision number.
@@ -117,17 +117,17 @@ public:
     /*!
       Icon name.
      */
-    QString   icon() const;
+    const QString &icon() const;
 
     /*!
       Root directors. Can be either <i>/dropbox</i> or <i>/sandbox</i>
     */
-    QString   root() const;
+    const QString &root() const;
 
     /*!
       Full canonical path of the file.
     */
-    QString   path()  const;
+    const QString &path() const;
 
     /*!
       Indicates whether the selected item is a directory.
@@ -137,7 +137,7 @@ public:
     /*!
       Mime-Type of the item.
     */
-    QString   mimeType()  const;
+    const QString &mimeType() const;
 
     /*!
       Indiciates that the item was deleted from the server.
@@ -147,7 +147,7 @@ public:
     /*!
       Current revision as hash string. Use this for e.g. change check.
     */
-    QString   revisionHash()  const;
+    const QString &revisionHash() const;
 
     /*!
       Returns the content of a directory.

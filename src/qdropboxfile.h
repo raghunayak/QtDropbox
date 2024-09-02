@@ -64,7 +64,7 @@ public:
       \param api A QDropbox that is connected to an user account.
       \param parent Parent QObject
      */
-    QDropboxFile(QString filename, QDropbox* api, QObject* parent = 0);
+    QDropboxFile(const QString &filename, QDropbox* api, QObject* parent = nullptr);
 
     /*!
       This deconstructor cleans up on destruction of the object.
@@ -110,12 +110,12 @@ public:
 
       \param filename Path of the file.
      */
-    void setFilename(QString filename);
+    void setFilename(const QString &filename);
 
     /*!
       Returns the path of the file that is accessed by this instance.
      */
-    QString filename();
+    const QString &filename();
 
     /*!
       Writes the content of the buffer to the file (only if the file is opened in
@@ -255,7 +255,7 @@ private:
     void connectSignals();
 
     bool isMode(QIODevice::OpenMode mode);
-    bool getFileContent(QString filename);
+    bool getFileContent(const QString &filename);
     void rplyFileContent(QNetworkReply* rply);
     void rplyFileWrite(QNetworkReply* rply);
     void startEventLoop();
@@ -263,7 +263,7 @@ private:
     bool putFile();
     void obtainMetadata();
 
-    void _init(QDropbox *api, QString filename, qint64 bufferTh);
+    void _init(QDropbox *api, const QString &filename, qint64 bufferTh);
 };
 
 #endif // QDROPBOXFILE_H

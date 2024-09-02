@@ -38,7 +38,7 @@ public:
       \param jsonString JSON data in string representation
       \param parent Parent QObject.
      */
-    QDropboxAccount(QString jsonString, QObject *parent = 0);
+    QDropboxAccount(const QString &jsonString, QObject *parent = nullptr);
 
     /*!
       Use this constructor to create a copy of an other QDropboxAccount.
@@ -55,7 +55,7 @@ public:
     /*!
       Returns the display name of the account.
      */
-    QString displayName()  const;
+    const QString &displayName()  const;
 
     /*!
       Returns the Dropbox UID of the account.
@@ -65,12 +65,12 @@ public:
     /*!
       Returns the country the account is associated to.
      */
-    QString country()  const;
+    const QString &country()  const;
 
     /*!
       Returns the E-Mail address the owner of the account uses.
      */
-    QString email()  const;
+    const QString &email()  const;
 
     /*!
       Returns the user's used quota in shared folders in bytes.

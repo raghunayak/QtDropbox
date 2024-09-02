@@ -29,7 +29,7 @@ public:
     QDropboxDeltaResponse();
 
     //! Constructs a QDropboxDeltaResponse object from a JSON response.
-    QDropboxDeltaResponse(QString response);
+    QDropboxDeltaResponse(const QString &response);
 
     //! Retrieves the string-to-metadata map.
     /*!
@@ -44,7 +44,7 @@ public:
     bool shouldReset() const;
 
     //! Returns the cursor that should be passed to the next delta API call.
-    QString getNextCursor() const;
+    const QString &getNextCursor() const;
 
     //! Returns whether or not a subsequent delta API call is part of the same response.
     /*!

@@ -141,7 +141,7 @@ public:
       the REST API version 1.0 is used (currently the only one supported) and the authentication method is
       QDropbox::Plaintext.
 
-      You need to set your API key and shared secret by using setKey(QString key) and setSharedSecret(QString sharedSecret).
+      You need to set your API key and shared secret by using setKey(const QString &key) and setSharedSecret(const QString &sharedSecret).
 
       \param parent The parent object QDropbox depends on.
      */
@@ -158,9 +158,9 @@ public:
       \param parent Parent object of QDropbox
 
      */
-    explicit QDropbox(QString key, QString sharedSecret,
+    explicit QDropbox(const QString &key, const QString &sharedSecret,
                       OAuthMethod method = QDropbox::Plaintext,
-                      QString url = "api.dropbox.com", QObject *parent = 0);
+                      const QString &url = "api.dropbox.com", QObject *parent = nullptr);
 
     /*!
       If an error occured you can access the last error code by using this function.
@@ -171,7 +171,7 @@ public:
       After an error occured you'll get a description of the last error by using this
       function.
      */
-    QString errorString();
+    const QString &errorString();
 
     /*!
       Use this function if you want to change the URL of the API server you are
@@ -181,7 +181,7 @@ public:
 
       \param url URL of the API server. Usually this is <em>api.dropbox.com</em>
      */
-    void setApiUrl(QString url);
+    void setApiUrl(const QString &url);
 
     /*!
       Provides you with the address of the API server.
@@ -208,12 +208,12 @@ public:
 
       \param apiversion Version string of the API
      */
-    void setApiVersion(QString apiversion);
+    void setApiVersion(const QString &apiversion);
 
     /*!
       Returns the currently used API version.
      */
-    QString apiVersion();
+    const QString &apiVersion();
 
     /*!
       Use this function to set your applications API key if you did not already when
@@ -222,12 +222,12 @@ public:
 
       \param key API key of your application.
      */
-    void setKey(QString key);
+    void setKey(const QString &key);
 
     /*!
       Returns the used API key of the application.
     */
-    QString key();
+    const QString &key();
 
     /*!
       Use this function to set your applications API secret if you did not when using
@@ -236,12 +236,12 @@ public:
 
       \param sharedSecret API secret of your application
      */
-    void setSharedSecret(QString sharedSecret);
+    void setSharedSecret(const QString &sharedSecret);
 
     /*!
       Returns the used API secret.
      */
-    QString sharedSecret();
+    const QString &sharedSecret();
 
     /*!
       If you have an already verified and authorized token to communicate with the
@@ -251,12 +251,12 @@ public:
 
       \param t token string
      */
-    void setToken(QString t);
+    void setToken(const QString &t);
     /*!
       Returns the used token. This function may be used to get an authorized token
       after iniating a new connection (e.g. to save it for later use).
      */
-    QString token();
+    const QString &token();
 
     /*!
       If you have an already verified and authorized token and token secret to
@@ -266,22 +266,22 @@ public:
 
       \param s token secret string
      */
-    void setTokenSecret(QString s);
+    void setTokenSecret(const QString &s);
     /*!
       Returns the currently used token secret. This function may be used to get an
       authorized token secret after iniating a new connection (e.g. to save it).
      */
-    QString tokenSecret();
+    const QString &tokenSecret();
 
     /*!
       Returns the Dropbox API key that is used.
      */
-    QString appKey();
+    const QString &appKey();
 
     /*!
       Returns the currently used Dropbox API shared secret of your application.
      */
-    QString appSharedSecret();
+    const QString &appSharedSecret();
 
     /*!
       This functions requests a request token that will be valid for the rest of the
@@ -312,7 +312,7 @@ public:
       \warning This functions is currently not supported by the Dropbox API. You need
                the user to authenticate by using the URL provided by authorizeLink().
      */
-    int authorize(QString mail, QString password);
+    int authorize(const QString &mail, const QString &password);
     /*!
       Returns an URL the user will have to use to authorize the connection to your
       application. You may use that link in connection with QDesktopServices::openUrl(...)
@@ -362,7 +362,7 @@ public:
       \param base Complete unsigned request URL
       \param method Request method (currently only POST or GET)
      */
-    QString oAuthSign(QUrl base, QString method = "GET");
+    QString oAuthSign(const QUrl &base, const QString &method = "GET");
 
     /*!
       Returns the authentication method as string.
@@ -385,7 +385,7 @@ public:
       \param file The absoulte path of the file (e.g. <i>/dropbox/test.txt</i>)
       \param blocking <i>internal only</i> indidicates if the call should block
     */
-    void requestMetadata(QString file, bool blocking = false);
+    void requestMetadata(const QString &file, bool blocking = false);
 
     /*!
       Works exactly like QDropbox::requestMetadata() but blocks until the metadata
@@ -394,14 +394,14 @@ public:
 
       \param file The absoulte path of the file (e.g. <i>/dropbox/test.txt</i>)
      */
-    QDropboxFileInfo requestMetadataAndWait(QString file);
+    QDropboxFileInfo requestMetadataAndWait(const QString &file);
 
     /*!
      * \brief Creates and returns a Dropbox link to files or folders users can use to view a preview of the file in a web browser.
      * \param path from the file i.e. /dropbox/hello.txt
      * \param blocking
      */
-    void requestSharedLink(QString file, bool blocking = false);
+    void requestSharedLink(const QString &file, bool blocking = false);
 
     /*!
     * \brief Works exactly like QDropbox::requestSharedLink() but blocks until link
@@ -409,7 +409,7 @@ public:
     * \param path from the file i.e. /dropbox/hello.txt
     * \return Url to the file
     */
-    QUrl requestSharedLinkAndWait(QString file);
+    QUrl requestSharedLinkAndWait(const QString &file);
 
     /*!
       Resets the last error. Use this when you reacted on an error to delete the error flag.
@@ -424,7 +424,7 @@ public:
       \param max Defines the maximum amount of revisions to be requested.
       \param blocking <i>internal only</i> indidicates if the call should block
      */
-    void requestRevisions(QString file, int max = 10, bool blocking = false);
+    void requestRevisions(const QString &file, int max = 10, bool blocking = false);
 
     /*!
       Works exactly like QDropbox::requestRevisions but blocks until the list of revisisions was
@@ -433,7 +433,7 @@ public:
       \param file The absoulte path of the file (e.g. <i>/dropbox/test.txt</i>)
       \param max Defines the maximum amount of revisions to be requested.
      */
-    QList<QDropboxFileInfo> requestRevisionsAndWait(QString file, int max = 10);
+    QList<QDropboxFileInfo> requestRevisionsAndWait(const QString &file, int max = 10);
 
 
     /*!
@@ -444,7 +444,7 @@ public:
       \param path_prefix If non-empty, only include entries with given prefix.
 
      */
-    void requestDelta(QString cursor, QString path_prefix, bool blocking = false);
+    void requestDelta(const QString &cursor, const QString &path_prefix, bool blocking = false);
 
     /*!
       \brief Works exactly like QDropbox::requestDelta but blocks until the list of delta
@@ -456,7 +456,7 @@ public:
       \return a QDropboxDeltaResponse representing the API response.
 
      */
-     QDropboxDeltaResponse requestDeltaAndWait(QString cursor, QString path_prefix);
+     QDropboxDeltaResponse requestDeltaAndWait(const QString &cursor, const QString &path_prefix);
 
      /*!
        \brief Provides information about a request.
@@ -536,7 +536,7 @@ signals:
       \param token Temporary token
       \param secret Temporary token secret
      */
-    void requestTokenFinished(QString token, QString secret);
+    void requestTokenFinished(const QString &token, const QString &secret);
     /*!
       This signal is emitted when the function requestAccessToken() is finished and
       a valid and authorized token used for the connection was received.
@@ -544,14 +544,14 @@ signals:
       \param token Token used for the connection to Dropbox
       \param secret Secret used for the connection to Dropbox
      */
-    void accessTokenFinished(QString token, QString secret);
+    void accessTokenFinished(const QString &token, const QString &secret);
     /*!
       Emitted whenever the token changes.
 
       \param token New token.
       \param secret New secret.
      */
-    void tokenChanged(QString token, QString secret);
+    void tokenChanged(const QString &token, const QString &secret);
 
     /*!
       Emitted when account information was received. Only relevant for non-blocking
@@ -559,7 +559,7 @@ signals:
 
       \param accountJson JSON that contains the account information data.
      */
-    void accountInfoReceived(QString accountJson);
+    void accountInfoReceived(const QString &accountJson);
 
     /*!
       Emitted when metadata information about a file or directory was received. This will
@@ -567,24 +567,24 @@ signals:
 
       \param metadataJson JSON string that contains the metadata information
     */
-    void metadataReceived(QString metadataJson);
+    void metadataReceived(const QString &metadataJson);
 
     /*!
     Emmited when shared link was received. Only relevant for non-blocking use of sharedLink()
     \param sharedLinkJson string than contains the share link information.
     */
-    void sharedLinkReceived(QString sharedLink);
+    void sharedLinkReceived(const QString &sharedLink);
 
     /*!
       Emitted when revisions of a file were received. Only relevant for non-blocking use
       of requestRevisions().
     */
-    void revisionsReceived(QString revisionJson);
+    void revisionsReceived(const QString &revisionJson);
 
     /*!
       Emitted when a delta response is received.
     */
-    void deltaReceived(QString deltaJson);
+    void deltaReceived(const QString &deltaJson);
 
 public slots:
 
@@ -625,7 +625,7 @@ private:
     QString password;
 
     // for blocked functions
-    QEventLoop *_evLoop;
+    QEventLoop *_evLoop = nullptr;
     void startEventLoop();
     void stopEventLoop();
 
@@ -638,26 +638,26 @@ private:
     // mind the possible performance impact!
     bool _saveFinishedRequests;
 
-    QString hmacsha1(QString key, QString baseString);
+    QString hmacsha1(const QString &key, const QString &baseString);
     void prepareApiUrl();
-    int  sendRequest(QUrl request, QString type = "GET", QByteArray postdata = 0, QString host = "");
-    void responseTokenRequest(QString response);
-    void responseBlockedTokenRequest(QString response);
-    int  responseDropboxLogin(QString response, int reqnr);
-    void responseAccessToken(QString response);
-    void responseBlockingAccessToken(QString response);
-    void parseToken(QString response);
-    void parseAccountInfo(QString response);
-    void parseSharedLink(QString response);
+    int sendRequest(QUrl request, const QString &type = "GET", QByteArray postdata = 0, QString host = "");
+    void responseTokenRequest(const QString &response);
+    void responseBlockedTokenRequest(const QString &response);
+    int  responseDropboxLogin(const QString &response, int reqnr);
+    void responseAccessToken(const QString &response);
+    void responseBlockingAccessToken(const QString &response);
+    void parseToken(const QString &response);
+    void parseAccountInfo(const QString &response);
+    void parseSharedLink(const QString &response);
     void checkReleaseEventLoop(int reqnr);
-    void parseMetadata(QString response);
-    void parseBlockingAccountInfo(QString response);
-    void parseBlockingMetadata(QString response);
-    void parseBlockingSharedLink(QString response);
-    void parseRevisions(QString response);
-    void parseBlockingRevisions(QString response);
-    void parseDelta(QString response);
-    void parseBlockingDelta(QString response);
+    void parseMetadata(const QString &response);
+    void parseBlockingAccountInfo(const QString &response);
+    void parseBlockingMetadata(const QString &response);
+    void parseBlockingSharedLink(const QString &response);
+    void parseRevisions(const QString &response);
+    void parseBlockingRevisions(const QString &response);
+    void parseDelta(const QString &response);
+    void parseBlockingDelta(const QString &response);
     void removeRequestFromMap(int rqnr);
 };
 
