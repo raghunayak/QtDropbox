@@ -200,7 +200,7 @@ void QtDropboxTest::jsonCase13()
  */
 void QtDropboxTest::jsonCase14()
 {
-    QDropboxJson json("{\"string\": \"[asdf]abcd\"}");  
+    QDropboxJson json("{\"string\": \"[asdf]abcd\"}");
     QVERIFY2(json.isValid(), "json could not be parsed");
     QVERIFY2(json.getString("string").compare("[asdf]abcd") == 0, "square brackets in string not parsed correctly");
 }
@@ -211,10 +211,10 @@ void QtDropboxTest::jsonCase14()
  */
 void QtDropboxTest::jsonCase15()
 {
-    QDropboxJson json("{\"string\": \"{asdf}abcd\"}");  
+    QDropboxJson json("{\"string\": \"{asdf}abcd\"}");
     QVERIFY2(json.isValid(), "json could not be parsed");
-    QVERIFY2(json.getString("string").compare("{asdf}abcd") == 0, 
-	     QString("curly brackets in string not parsed correctly [%1]").arg(json.getString("string")).toStdString().c_str());
+    QVERIFY2(json.getString("string").compare("{asdf}abcd") == 0,
+         QString("curly brackets in string not parsed correctly [%1]").arg(json.getString("string")).toStdString().c_str());
 }
 
 /**
@@ -301,7 +301,7 @@ void QtDropboxTest::authorizeApplication(QDropbox* d)
     QDesktopServices::openUrl(d->authorizeLink());
     strout << "Wait for authorized the application!";
     strout << endl;
-    
+
     while(d->requestAccessTokenAndWait() == false)
     {
         QThread::msleep(1000);

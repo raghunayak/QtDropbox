@@ -193,67 +193,67 @@ public:
      */
     QString strContent() const;
 
-	/*!
-	  Returns a stored string values as QDateTime timestamp. The timestamp will be invalid
-	  if the string could not be converted.
-	*/
+    /*!
+      Returns a stored string values as QDateTime timestamp. The timestamp will be invalid
+      if the string could not be converted.
+    */
     QDateTime getTimestamp(QString key, bool force = false);
 
     void setTimestamp(QString key, QDateTime value);
 
-	/*!
-	  Returnes a stored array as a list of string items. If the key does not exist or is not
-	  stored as array the function returns an empty list. If you need the items in a specific
-	  data type you have to do equivalent casting your self!
-	*/
-	QStringList getArray(QString key, bool force = false);
+    /*!
+      Returnes a stored array as a list of string items. If the key does not exist or is not
+      stored as array the function returns an empty list. If you need the items in a specific
+      data type you have to do equivalent casting your self!
+    */
+    QStringList getArray(QString key, bool force = false);
 
-	/*!
-	  Returns the content of a stored array as a list of string items <i>if the JSON contains
-	  an anynmous array</i> (see also isAnonymousArray()). As with getArray(QString key, bool force = false)
-	  you have to parse the content of the array your self.
-	*/
-	QStringList getArray();
+    /*!
+      Returns the content of a stored array as a list of string items <i>if the JSON contains
+      an anynmous array</i> (see also isAnonymousArray()). As with getArray(QString key, bool force = false)
+      you have to parse the content of the array your self.
+    */
+    QStringList getArray();
 
-	/**!
-	  Overloaded operator to copy a QDropboxJson.
-	*/
+    /**!
+      Overloaded operator to copy a QDropboxJson.
+    */
     QDropboxJson& operator =(QDropboxJson&);
 
-	/**!
-	  A JSON may be an anonymous array like this:
-	  \code
-	  [
-	    "a": "valueA",
-		"b": "valueB"
-	  ]
-	  \endcode
+    /**!
+      A JSON may be an anonymous array like this:
+      \code
+      [
+        "a": "valueA",
+        "b": "valueB"
+      ]
+      \endcode
 
-	  Use this function to identify a JSON that is an anonymous array.
-	  \returns <code>true</code> if the JSON is an anonymous array.
-	*/
-	bool isAnonymousArray();
+      Use this function to identify a JSON that is an anonymous array.
+      \returns <code>true</code> if the JSON is an anonymous array.
+    */
+    bool isAnonymousArray();
 
-	/**!
-	  Compares two JSON objects if they are the same.
-	  This means that they have the same keys with the same values.
+    /**!
+      Compares two JSON objects if they are the same.
+      This means that they have the same keys with the same values.
 
-	  \param other the JSON you wish to compare to
-	  \returns 0 if the JSON objects are equals
-	*/
-	int compare(const QDropboxJson& other);
-    
+      \param other the JSON you wish to compare to
+      \returns 0 if the JSON objects are equals
+    */
+    int compare(const QDropboxJson& other);
+
 protected:
-		bool valid;
+        bool valid;
 
 private:
     QMap<QString, qdropboxjson_entry> valueMap;
-	bool _anonymousArray;
+    bool _anonymousArray;
 
     void emptyList();
     qdropboxjson_entry_type interpretType(QString value);
-	int parseSubJson(QString str, int start, qdropboxjson_entry *jsonEntry);
-	void _init();
+    int parseSubJson(QString str, int start, qdropboxjson_entry *jsonEntry);
+    void _init();
 };
 
 #endif // QDROPBOXJSON_H

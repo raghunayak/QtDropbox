@@ -25,7 +25,7 @@ QDropbox::QDropbox(QObject *parent) :
     qsrand(QDateTime::currentMSecsSinceEpoch());
 
     _evLoop = NULL;
-	_saveFinishedRequests = false;
+    _saveFinishedRequests = false;
 }
 
 QDropbox::QDropbox(QString key, QString sharedSecret, OAuthMethod method, QString url, QObject *parent) :
@@ -55,7 +55,7 @@ QDropbox::QDropbox(QString key, QString sharedSecret, OAuthMethod method, QStrin
     qsrand(QDateTime::currentMSecsSinceEpoch());
 
     _evLoop = NULL;
-	_saveFinishedRequests = false;
+    _saveFinishedRequests = false;
 }
 
 QDropbox::Error QDropbox::error()
@@ -187,7 +187,7 @@ void QDropbox::requestFinished(int nr, QNetworkReply *rply)
         qDebug() << "error " << errorState << "(" << errorText << ") in request" << endl;
 #endif
         emit errorOccured(errorState);
-		checkReleaseEventLoop(nr);
+        checkReleaseEventLoop(nr);
         return;
     }
 
@@ -197,7 +197,7 @@ void QDropbox::requestFinished(int nr, QNetworkReply *rply)
 #ifdef QTDROPBOX_DEBUG
         qDebug() << "- answer to connection request ignored" << endl;
 #endif
-		removeRequestFromMap(nr);
+        removeRequestFromMap(nr);
         return;
     }
 
@@ -228,7 +228,7 @@ void QDropbox::requestFinished(int nr, QNetworkReply *rply)
             qdropbox_request redir = requestMap[nr];
             qdropbox_request orig  = requestMap[redir.linked];
             requestMap[nr] = orig;
-			removeRequestFromMap(nr);
+            removeRequestFromMap(nr);
             nr = redir.linked;
         }
 
@@ -257,7 +257,7 @@ void QDropbox::requestFinished(int nr, QNetworkReply *rply)
             break;
         case QDROPBOX_REQ_BMETADA:
             parseBlockingMetadata(response);
-			break;
+            break;
         case QDROPBOX_REQ_BACCTOK:
             responseBlockingAccessToken(response);
             break;
@@ -273,12 +273,12 @@ void QDropbox::requestFinished(int nr, QNetworkReply *rply)
         case QDROPBOX_REQ_BSHRDLN:
             parseBlockingSharedLink(response);
             break;
-		case QDROPBOX_REQ_REVISIO:
-			parseRevisions(response);
-			break;
-		case QDROPBOX_REQ_BREVISI:
-			parseBlockingRevisions(response);
-			break;
+        case QDROPBOX_REQ_REVISIO:
+            parseRevisions(response);
+            break;
+        case QDROPBOX_REQ_BREVISI:
+            parseBlockingRevisions(response);
+            break;
         case QDROPBOX_REQ_DELTA:
             parseDelta(response);
             break;
@@ -308,7 +308,7 @@ void QDropbox::requestFinished(int nr, QNetworkReply *rply)
             }
         }
 
-		removeRequestFromMap(nr);
+        removeRequestFromMap(nr);
         emit operationFinished(nr);
     }
 
@@ -462,7 +462,7 @@ int QDropbox::sendRequest(QUrl request, QString type, QByteArray postdata, QStri
 #ifdef QTDROPBOX_DEBUG
     qDebug() << "sendRequest() -> request #" << lastreply << " sent." << endl;
 #endif
-	emit operationStarted(lastreply); // fire signal for operation start
+    emit operationStarted(lastreply); // fire signal for operation start
     return lastreply;
 }
 
@@ -522,7 +522,7 @@ QString QDropbox::signatureMethodString()
 
 void QDropbox::parseToken(QString response)
 {
-	clearError();
+    clearError();
 #ifdef QTDROPBOX_DEBUG
     qDebug() << "processing token request" << endl;
 #endif
@@ -727,7 +727,7 @@ QString QDropbox::apiVersion()
 
 int QDropbox::requestToken(bool blocking)
 {
-	clearError();
+    clearError();
     QString sigmeth = signatureMethodString();
 
     timestamp = QDateTime::currentMSecsSinceEpoch()/1000;
@@ -806,7 +806,7 @@ QUrl QDropbox::authorizeLink()
 
 int QDropbox::requestAccessToken(bool blocking)
 {
-	clearError();
+    clearError();
 
     QUrl url;
     url.setUrl(apiurl.toString());
@@ -957,7 +957,7 @@ QDropboxFileInfo QDropbox::requestMetadataAndWait(QString file)
 
 void QDropbox::requestSharedLink(QString file, bool blocking)
 {
-	clearError();
+    clearError();
 
     QUrl url;
     url.setUrl(apiurl.toString());
@@ -1119,7 +1119,7 @@ void QDropbox::parseBlockingSharedLink(QString response)
     clearError();
     parseSharedLink(response);
     stopEventLoop();
-	return;
+    return;
 }
 
 // check if the event loop has to be stopped after a blocking request was sent
@@ -1131,7 +1131,7 @@ void QDropbox::checkReleaseEventLoop(int reqnr)
     case QDROPBOX_REQ_BACCTOK:
     case QDROPBOX_REQ_BACCINF:
     case QDROPBOX_REQ_BMETADA:
-	case QDROPBOX_REQ_BREVISI:
+    case QDROPBOX_REQ_BREVISI:
         stopEventLoop(); // release local event loop
         break;
     default:
@@ -1142,9 +1142,9 @@ void QDropbox::checkReleaseEventLoop(int reqnr)
 
 void QDropbox::requestRevisions(QString file, int max, bool blocking)
 {
-	clearError();
+    clearError();
 
-	QUrl url;
+    QUrl url;
     url.setUrl(apiurl.toString());
 
     QUrlQuery urlQuery;
@@ -1176,22 +1176,22 @@ void QDropbox::requestRevisions(QString file, int max, bool blocking)
 
 QList<QDropboxFileInfo> QDropbox::requestRevisionsAndWait(QString file, int max)
 {
-	clearError();
-	requestRevisions(file, max, true);
-	QList<QDropboxFileInfo> revisionList;
+    clearError();
+    requestRevisions(file, max, true);
+    QList<QDropboxFileInfo> revisionList;
 
-	if(errorState != QDropbox::NoError || !_tempJson.isValid())
-		return revisionList;
+    if(errorState != QDropbox::NoError || !_tempJson.isValid())
+        return revisionList;
 
-	QStringList responseList = _tempJson.getArray();
-	for(int i=0; i<responseList.size(); ++i)
-	{
-		QString revData = responseList.at(i);
-		QDropboxFileInfo revision(revData);
-		revisionList.append(revision);
-	}
+    QStringList responseList = _tempJson.getArray();
+    for(int i=0; i<responseList.size(); ++i)
+    {
+        QString revData = responseList.at(i);
+        QDropboxFileInfo revision(revData);
+        revisionList.append(revision);
+    }
 
-	return revisionList;
+    return revisionList;
 }
 
 void QDropbox::parseRevisions(QString response)
@@ -1213,10 +1213,10 @@ void QDropbox::parseRevisions(QString response)
 
 void QDropbox::parseBlockingRevisions(QString response)
 {
-	clearError();
-	parseRevisions(response);
-	stopEventLoop();
-	return;
+    clearError();
+    parseRevisions(response);
+    stopEventLoop();
+    return;
 }
 
 void QDropbox::clearError()
@@ -1228,30 +1228,30 @@ void QDropbox::clearError()
 
 qdropbox_request QDropbox::requestInfo(int rqnr)
 {
-	qdropbox_request request{ QDROPBOX_REQ_INVALID, "", "", 0 };
+    qdropbox_request request{ QDROPBOX_REQ_INVALID, "", "", 0 };
 
-	if (!requestMap.contains(rqnr)) {
-		return request; // invalid request
-	}
+    if (!requestMap.contains(rqnr)) {
+        return request; // invalid request
+    }
 
-	return requestMap[rqnr];
+    return requestMap[rqnr];
 }
 
 void QDropbox::removeRequestFromMap(int rqnr)
 {
-	if (!saveFinishedRequests())
-	{
-		requestMap.remove(rqnr);
-	}
-	return;
+    if (!saveFinishedRequests())
+    {
+        requestMap.remove(rqnr);
+    }
+    return;
 }
 
 void QDropbox::setSaveFinishedRequests(bool save)
 {
-	_saveFinishedRequests = save;
+    _saveFinishedRequests = save;
 }
 
 bool QDropbox::saveFinishedRequests()
 {
-	return _saveFinishedRequests;
+    return _saveFinishedRequests;
 }

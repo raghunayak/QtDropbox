@@ -98,7 +98,7 @@ public:
      */
     void copyFrom(const QDropboxAccount& a);
 
-private:  
+private:
     QUrl    _referralLink;
     QString _displayName;
     quint64 _uid;
@@ -108,7 +108,7 @@ private:
     quint64 _quota;
     quint64 _quotaNormal;
 
-	void _init();
+    void _init();
 };
 
 #endif // QDROPBOXACCOUNT_H

@@ -410,30 +410,30 @@ public:
     * \return Url to the file
     */
     QUrl requestSharedLinkAndWait(QString file);
-    
+
     /*!
       Resets the last error. Use this when you reacted on an error to delete the error flag.
     */
     void clearError();
 
-	/*!
-	  Requests the latest revisions of a file. When the request is answered by the Dropbox server
-	  the signal QDropbox::revisionsReceived() will be emitted.
+    /*!
+      Requests the latest revisions of a file. When the request is answered by the Dropbox server
+      the signal QDropbox::revisionsReceived() will be emitted.
 
-	  \param file The absoulte path of the file (e.g. <i>/dropbox/test.txt</i>)
-	  \param max Defines the maximum amount of revisions to be requested.
-	  \param blocking <i>internal only</i> indidicates if the call should block
-	 */
-	void requestRevisions(QString file, int max = 10, bool blocking = false);
+      \param file The absoulte path of the file (e.g. <i>/dropbox/test.txt</i>)
+      \param max Defines the maximum amount of revisions to be requested.
+      \param blocking <i>internal only</i> indidicates if the call should block
+     */
+    void requestRevisions(QString file, int max = 10, bool blocking = false);
 
-	/*!
-	  Works exactly like QDropbox::requestRevisions but blocks until the list of revisisions was
-	  received.
+    /*!
+      Works exactly like QDropbox::requestRevisions but blocks until the list of revisisions was
+      received.
 
-	  \param file The absoulte path of the file (e.g. <i>/dropbox/test.txt</i>)
-	  \param max Defines the maximum amount of revisions to be requested.
-	 */
-	QList<QDropboxFileInfo> requestRevisionsAndWait(QString file, int max = 10);
+      \param file The absoulte path of the file (e.g. <i>/dropbox/test.txt</i>)
+      \param max Defines the maximum amount of revisions to be requested.
+     */
+    QList<QDropboxFileInfo> requestRevisionsAndWait(QString file, int max = 10);
 
 
     /*!
@@ -458,39 +458,39 @@ public:
      */
      QDropboxDeltaResponse requestDeltaAndWait(QString cursor, QString path_prefix);
 
-	 /*!
-	   \brief Provides information about a request.
+     /*!
+       \brief Provides information about a request.
 
-	   This function can be used if you wish to obtain further information regarding a request.
-	   It provides technical information for requests so it is mostly about debugging information.
+       This function can be used if you wish to obtain further information regarding a request.
+       It provides technical information for requests so it is mostly about debugging information.
 
-	   Requesting information about a request number that does not exist will return invalid information.
+       Requesting information about a request number that does not exist will return invalid information.
 
-	   Requesting information on a request that has been finished already will return an invalid record.
+       Requesting information on a request that has been finished already will return an invalid record.
 
-	   \param rqnr number of the request
-	 */
-	 qdropbox_request requestInfo(int rqnr);
+       \param rqnr number of the request
+     */
+     qdropbox_request requestInfo(int rqnr);
 
-	 /*!
-		\brief For debugging: Save finished requests so information can be requested on them.
+     /*!
+        \brief For debugging: Save finished requests so information can be requested on them.
 
-		This function is for debugging errors. When the setting is changed to true records of already
-		finished requests to Dropbox will be saved. Usually they are deleted as soon as they are
-		processed. Saving them will allow you to use requestInfo(...) on already finished requests.
+        This function is for debugging errors. When the setting is changed to true records of already
+        finished requests to Dropbox will be saved. Usually they are deleted as soon as they are
+        processed. Saving them will allow you to use requestInfo(...) on already finished requests.
 
-		Activating this setting may have an impact about long-time performance and used memory.
+        Activating this setting may have an impact about long-time performance and used memory.
 
-		Old records will not be deleted when the setting is turned off!
+        Old records will not be deleted when the setting is turned off!
 
-		\param save set to true if you want to persist request information
-	 */
-	 void setSaveFinishedRequests(bool save);
+        \param save set to true if you want to persist request information
+     */
+     void setSaveFinishedRequests(bool save);
 
-	 /*!
-		\brief Indicates if information about finished requests is to be persisted.
-	 */
-	 bool saveFinishedRequests();
+     /*!
+        \brief Indicates if information about finished requests is to be persisted.
+     */
+     bool saveFinishedRequests();
 
 signals:
     /*!
@@ -520,14 +520,14 @@ signals:
      */
     void operationFinished(int requestnr);
 
-	/*!
-	  When an asynchronous operation (actually any operation) that requests or transfers
-	  information from or to Dropbox is started this signal is emitted. The passed
-	  request number can be used to link operations with the operationFinished(...) signal.
+    /*!
+      When an asynchronous operation (actually any operation) that requests or transfers
+      information from or to Dropbox is started this signal is emitted. The passed
+      request number can be used to link operations with the operationFinished(...) signal.
 
-	  \param requestnr number of the started request.
-	*/
-	void operationStarted(int requestnr);
+      \param requestnr number of the started request.
+    */
+    void operationStarted(int requestnr);
 
     /*!
       This signal is emitted when the function requestToken() is finished and a
@@ -575,11 +575,11 @@ signals:
     */
     void sharedLinkReceived(QString sharedLink);
 
-	/*!
-	  Emitted when revisions of a file were received. Only relevant for non-blocking use
-	  of requestRevisions().
-	*/
-	void revisionsReceived(QString revisionJson);
+    /*!
+      Emitted when revisions of a file were received. Only relevant for non-blocking use
+      of requestRevisions().
+    */
+    void revisionsReceived(QString revisionJson);
 
     /*!
       Emitted when a delta response is received.
@@ -634,9 +634,9 @@ private:
 
     QDropboxAccount _account;
 
-	// indicates wether finished request shall be saved for debugging
-	// mind the possible performance impact!
-	bool _saveFinishedRequests;
+    // indicates wether finished request shall be saved for debugging
+    // mind the possible performance impact!
+    bool _saveFinishedRequests;
 
     QString hmacsha1(QString key, QString baseString);
     void prepareApiUrl();
@@ -654,11 +654,11 @@ private:
     void parseBlockingAccountInfo(QString response);
     void parseBlockingMetadata(QString response);
     void parseBlockingSharedLink(QString response);
-	void parseRevisions(QString response);
-	void parseBlockingRevisions(QString response);
+    void parseRevisions(QString response);
+    void parseBlockingRevisions(QString response);
     void parseDelta(QString response);
     void parseBlockingDelta(QString response);
-	void removeRequestFromMap(int rqnr);
+    void removeRequestFromMap(int rqnr);
 };
 
 #endif // QDROPBOX_H

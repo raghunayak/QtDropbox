@@ -159,47 +159,47 @@ public:
      */
     bool overwrite();
 
-	/*!
-	  Return the metadata of the file as a QDropboxFileInfo object.
-	*/
-	QDropboxFileInfo metadata();
+    /*!
+      Return the metadata of the file as a QDropboxFileInfo object.
+    */
+    QDropboxFileInfo metadata();
 
-	/*!
-	  Check if the file has changed on the dropbox while it was opened locally.
-	  This function will return false if the file was not previously opened and an error
-	  occured during the retrieval of the file metadata. Hence it is safer to open the file
-	  first and then check hasChanged()
+    /*!
+      Check if the file has changed on the dropbox while it was opened locally.
+      This function will return false if the file was not previously opened and an error
+      occured during the retrieval of the file metadata. Hence it is safer to open the file
+      first and then check hasChanged()
 
-	  \returns <i>true</i> if the file has changed or <i>false</i> if it has not.
-	*/
-	bool hasChanged();	
+      \returns <i>true</i> if the file has changed or <i>false</i> if it has not.
+    */
+    bool hasChanged();
 
-	/*!
-	  Gets and returns all available revisions of the file.
-	  \param max When defined the function will only list up to the specified amount of revisions.
-	  \returns A list of the latest revisions of the file.
-	*/
-	QList<QDropboxFileInfo> revisions(int max = 10);
+    /*!
+      Gets and returns all available revisions of the file.
+      \param max When defined the function will only list up to the specified amount of revisions.
+      \returns A list of the latest revisions of the file.
+    */
+    QList<QDropboxFileInfo> revisions(int max = 10);
 
-	/*!
-	  Reimplemented from QIODevice::seek().
-	  Foreward to the given (byte) position in the file. Unlike QFile::seek() this function does
-	  not seek beyond the file end. When seeking beyond the end of a file this function stops beyond
-	  the last byte of the current content and returns <code>false</code>.
-	*/
-	bool seek(qint64 pos);
+    /*!
+      Reimplemented from QIODevice::seek().
+      Foreward to the given (byte) position in the file. Unlike QFile::seek() this function does
+      not seek beyond the file end. When seeking beyond the end of a file this function stops beyond
+      the last byte of the current content and returns <code>false</code>.
+    */
+    bool seek(qint64 pos);
 
-	/*!
-	  Reimplemented from QIODevice::pos().
-	  Returns the current position in the file.
-	*/
+    /*!
+      Reimplemented from QIODevice::pos().
+      Returns the current position in the file.
+    */
     qint64 pos() const;
 
-	/*!
-	  Reimplemented from QIODevice::reset().
-	  Seeks to the beginning of the file. See seek().
-	*/
-	bool reset();
+    /*!
+      Reimplemented from QIODevice::reset().
+      Seeks to the beginning of the file. See seek().
+    */
+    bool reset();
 
 public slots:
     void abort();
@@ -247,9 +247,9 @@ private:
 
     bool _overwrite;
 
-	int _position;
+    int _position;
 
-	QDropboxFileInfo *_metadata;
+    QDropboxFileInfo *_metadata;
 
     void obtainToken();
     void connectSignals();
@@ -261,7 +261,7 @@ private:
     void startEventLoop();
     void stopEventLoop();
     bool putFile();
-	void obtainMetadata();
+    void obtainMetadata();
 
     void _init(QDropbox *api, QString filename, qint64 bufferTh);
 };

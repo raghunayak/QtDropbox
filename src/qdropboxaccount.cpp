@@ -12,7 +12,7 @@ QDropboxAccount::QDropboxAccount(QObject *parent) :
 QDropboxAccount::QDropboxAccount(QString jsonString, QObject *parent) :
     QDropboxJson(jsonString, parent)
 {
-	_init();
+    _init();
 }
 
 QDropboxAccount::QDropboxAccount(const QDropboxAccount& other) :
